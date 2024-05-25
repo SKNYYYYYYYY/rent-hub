@@ -1,111 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:rent_hub/ApartmentDetailsPage.dart';
+import 'package:rent_hub/Statistics.dart'; // Ensure this is the correct file name and path
+import 'package:rent_hub/Tenants.dart';
+import 'package:rent_hub/Calendar.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Apartment Details',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
       ),
-      home: const ApartmentDetailsPage(),
+      home: const MainPage(),
     );
   }
 }
 
-class ApartmentDetailsPage extends StatelessWidget {
-  const ApartmentDetailsPage({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({Key? key});
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _pages = <Widget>[
+    Tenants(),
+    ApartmentDetailsPage(),
+    Statistics(),
+    Calendar(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add/Edit Apartment Details'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              backgroundImage: const AssetImage('assets/profile_picture.jpg'),
-            ),
-          ),
-          const IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: null,
-          ),
-        ],
+        title: Text(
+          ['Tenants', 'Apartment', 'Statistics', 'Calendar'][_selectedIndex],
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.black,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          const ListTile(
-            leading: Icon(Icons.apartment, color: Colors.red),
-            title: Text('Apartment name: Kowalski Enteries'),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, size: 28), // Increased size slightly
+            label: 'Tenants',
           ),
-          const ListTile(
-            leading: Icon(Icons.apartment, color: Colors.red),
-            title: Text('Apartment size: five story building'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.apartment, size: 28), // Increased size slightly
+            label: 'Apartment',
           ),
-          ListTile(
-            leading: const Icon(Icons.image, color: Colors.red),
-            title: const Text('Apartment picture:'),
-            trailing: Container(
-              width: 50,
-              height: 50,
-              color: Colors.grey[300],
-              child: const Icon(Icons.camera_alt),
-            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.insert_chart, size: 28), // Increased size slightly
+            label: 'Statistics',
           ),
-          const ListTile(
-            leading: Icon(Icons.house, color: Colors.red),
-            title: Text('House type: Two bedroomed'),
-          ),
-          ListTile(
-            leading: const Icon(Icons.image, color: Colors.red),
-            title: const Text('House Picture:'),
-            trailing: Container(
-              width: 50,
-              height: 50,
-              color: Colors.grey[300],
-              child: const Icon(Icons.camera_alt),
-            ),
-          ),
-          const ListTile(
-            leading: Icon(Icons.attach_money, color: Colors.red),
-            title: Text('Rent: 50000 ksh per month'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.people, color: Colors.red),
-            title: Text('Number of occupants: 4'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.house, color: Colors.red),
-            title: Text('House Number: 23'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.location_on, color: Colors.red),
-            title: Text('Location: River road, Montpellier'),
-          ),
-          const ListTile(
-            leading: Icon(Icons.house, color: Colors.red),
-            title: Text('Number of vacant houses: 6'),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Icon(Icons.person, color: Colors.red),
-              Icon(Icons.apartment, color: Colors.red),
-              Icon(Icons.insert_chart, color: Colors.red),
-              Icon(Icons.calendar_today, color: Colors.red),
-            ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today, size: 28), // Increased size slightly
+            label: 'Calendar',
           ),
         ],
+        selectedItemColor: Colors.blue, // Color of the selected item
+        unselectedItemColor: Colors.grey, // Color of the unselected items
+        backgroundColor: Colors.grey[200], // Background color of the BottomNavigationBar
+        showUnselectedLabels: true, // Ensuring labels are always visible
+        type: BottomNavigationBarType.fixed, // Removing shifting animation
       ),
     );
   }
