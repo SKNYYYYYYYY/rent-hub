@@ -1,1 +1,1 @@
-# rent-hub
+#Rental Management flutter app
